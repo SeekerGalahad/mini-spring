@@ -1,7 +1,11 @@
 package com.training.spring.starter;
 
+import com.training.spring.core.ClassScanner;
 import com.training.spring.web.server.TomcatServer;
 import org.apache.catalina.LifecycleException;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Wagic
@@ -14,7 +18,9 @@ public class MiniApplication {
         TomcatServer tomcatServer = new TomcatServer(args);
         try {
             tomcatServer.startServer();
-        } catch (LifecycleException e) {
+            List<Class<?>> classes = ClassScanner.scanClasses(cls.getPackage().getName());
+            classes.forEach(x -> System.out.println(x.getName()));
+        } catch (LifecycleException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
