@@ -2,6 +2,7 @@ package com.training.spring.starter;
 
 import com.training.spring.beans.BeanFactory;
 import com.training.spring.core.ClassScanner;
+import com.training.spring.web.handler.HandlerManager;
 import com.training.spring.web.server.TomcatServer;
 import org.apache.catalina.LifecycleException;
 
@@ -22,6 +23,7 @@ public class MiniApplication {
             List<Class<?>> classes = ClassScanner.scanClasses(cls.getPackage().getName());
             classes.forEach(x -> System.out.println(x.getName()));
             BeanFactory.initBean(classes);
+            HandlerManager.resolveMappingHandler(classes);
 
         } catch (Exception e) {
             e.printStackTrace();

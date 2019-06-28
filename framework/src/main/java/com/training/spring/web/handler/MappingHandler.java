@@ -1,5 +1,10 @@
 package com.training.spring.web.handler;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -24,4 +29,20 @@ public class MappingHandler {
     }
 
 
+    public boolean handle(ServletRequest req, ServletResponse res) throws IllegalAccessException, InstantiationException, IOException, InvocationTargetException {
+        String requestURI = ((HttpServletRequest) req).getRequestURI();
+        if (!uri.equals(requestURI)) {
+            return false;
+        }
+
+        Object[] parameters = new Object[args.length];
+        for (int i = 0; i < args.length; i++) {
+            parameters[i] = req.getParameter(args[i]);
+        }
+
+        Object ctl = controller.newInstance();
+        Object response = method.invoke(ctl, parameters);
+        res.getWriter().println(response.toString());
+        return true;
+    }
 }

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class HandlerManager {
 
-    private static List<MappingHandler> mappingHandlerList =
+    public static List<MappingHandler> mappingHandlerList =
             new ArrayList<>();
 
     public static void resolveMappingHandler(List<Class<?>> classList) {
@@ -36,10 +36,13 @@ public class HandlerManager {
             List<String> paramNameList = new ArrayList<>();
             for (Parameter parameter : method.getParameters()) {
                 if (parameter.isAnnotationPresent(RequestParam.class)) {
-
+                    paramNameList.add(parameter.getDeclaredAnnotation(RequestParam.class).value());
                 }
             }
-         }
+            String[] params = paramNameList.toArray(new String[paramNameList.size()]);
+            MappingHandler mappingHandler = new MappingHandler(uri, method, cls, params);
+            mappingHandlerList.add(mappingHandler);
+        }
     }
 
 

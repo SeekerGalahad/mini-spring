@@ -1,11 +1,15 @@
 package com.training.spring.web.servlet;
 
+import com.training.spring.web.handler.HandlerManager;
+import com.training.spring.web.handler.MappingHandler;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Wagic
@@ -94,7 +98,15 @@ public class DispatcherServlet implements Servlet {
      */
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        res.getWriter().println("test");
+        for (MappingHandler mappingHandler : HandlerManager.mappingHandlerList) {
+            try {
+                if(mappingHandler.handle(req, res)) {
+                    return;
+                }
+            } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
