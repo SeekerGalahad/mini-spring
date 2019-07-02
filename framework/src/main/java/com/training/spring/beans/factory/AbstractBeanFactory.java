@@ -30,5 +30,5 @@ public abstract class AbstractBeanFactory implements BeanFactory {
      * @param beanDefinition
      * @return
      */
-    abstract Object doCreateBean(BeanDefinition beanDefinition);
+    abstract Object doCreateBean(BeanDefinition beanDefinition) throws InstantiationException, IllegalAccessException, NoSuchFieldException;
 }
