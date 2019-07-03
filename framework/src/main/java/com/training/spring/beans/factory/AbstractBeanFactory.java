@@ -15,7 +15,7 @@ public abstract class AbstractBeanFactory implements BeanFactory {
 
     private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
-    private final List<String> beanDefinitionNames = new ArrayList<>();
+    private final Map<String, Class<?>> beanClassNames = new ConcurrentHashMap<>();
 
     @Override
     public Object getBean(String name) throws Exception {
@@ -31,15 +31,19 @@ public abstract class AbstractBeanFactory implements BeanFactory {
     }
 
     public void preInstantiateSingletons() throws Exception {
-        for (String beanDefinitionName : this.beanDefinitionNames) {
+        for (String beanDefinitionName : this.beanClassNames.keySet()) {
             getBean(beanDefinitionName);
         }
+    }
+
+    public List<Class<?>> getBeanClasses() {
+        return new ArrayList<>(beanClassNames.values());
     }
 
     @Override
     public void registerBeanDefinition(String name, BeanDefinition beanDefinition) {
         beanDefinitionMap.put(name, beanDefinition);
-        beanDefinitionNames.add(name);
+        beanClassNames.put(name, beanDefinition.getBeanClass());
     }
 
     /**
