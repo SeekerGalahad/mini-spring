@@ -40,7 +40,6 @@ public abstract class AbstractBeanFactory implements BeanFactory {
         return new ArrayList<>(beanClassNames.values());
     }
 
-    @Override
     public void registerBeanDefinition(String name, BeanDefinition beanDefinition) {
         beanDefinitionMap.put(name, beanDefinition);
         beanClassNames.put(name, beanDefinition.getBeanClass());

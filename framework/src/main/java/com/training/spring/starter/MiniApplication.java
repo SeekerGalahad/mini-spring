@@ -6,12 +6,13 @@ import com.training.spring.beans.factory.AbstractBeanFactory;
 import com.training.spring.beans.factory.AutowireCapableBeanFactory;
 import com.training.spring.beans.io.ResourceLoader;
 import com.training.spring.beans.xml.XmlBeanDefinitionReader;
+import com.training.spring.context.ApplicationContext;
+import com.training.spring.context.ClassPathXmlApplicationContext;
 import com.training.spring.core.ClassScanner;
 import com.training.spring.web.handler.HandlerManager;
 import com.training.spring.web.server.TomcatServer;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Wagic
@@ -25,16 +26,7 @@ public class MiniApplication {
         try {
             tomcatServer.startServer();
 
-            XmlBeanDefinitionReader xmlBeanDefinitionReader = new XmlBeanDefinitionReader(new ResourceLoader());
-            xmlBeanDefinitionReader.loadBeanDefinitions("spring.xml");
-
-            AbstractBeanFactory beanFactory = new AutowireCapableBeanFactory();
-            for (Map.Entry<String, BeanDefinition> beanDefinitionEntry : xmlBeanDefinitionReader.getRegistry().entrySet()) {
-                beanFactory.registerBeanDefinition(beanDefinitionEntry.getKey(), beanDefinitionEntry.getValue());
-            }
-
-            List<Class<?>> classes = beanFactory.getBeanClasses();
-            classes.addAll(ClassScanner.scanClasses(cls.getPackage().getName()));
+            List<Class<?>> classes = ClassScanner.scanClasses(cls.getPackage().getName());
             BeanFactory.initBean(classes);
 
             HandlerManager.resolveMappingHandler(classes);
